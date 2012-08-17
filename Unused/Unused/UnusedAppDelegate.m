@@ -7,6 +7,7 @@
 //
 
 #import "UnusedAppDelegate.h"
+#import "NSString+Paths.h"
 
 @implementation UnusedAppDelegate
 
@@ -41,26 +42,30 @@
     // Setup double click
     [_resultsTableView setDoubleAction:@selector(tableViewDoubleClicked)];
     
-    // Setup labels
-    [_statusLabel setTextColor:[NSColor lightGrayColor]];
+    //Observe the search text field and enable/disable the search button accordingly
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(searchTextChanged:)
+                                                 name:NSControlTextDidChangeNotification
+                                               object:_pathTextField];
+}
 
-    // Setup search button
-    [_searchButton setBezelStyle:NSRoundedBezelStyle];
-    [_searchButton setKeyEquivalent:@"\r"];
+- (void)applicationWillTerminate:(NSNotification *)aNotification {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 -(void)dealloc
 {
-    [_searchDirectoryPath release];
+    self.searchDirectoryPath = nil;
     
     [_results release];
     [_retinaImagePaths release];
-    [_queue release];    
+    [_queue release];
 
     [super dealloc];
 }
 
 #pragma mark - Actions
+
 -(IBAction)browseButtonSelected:(id)sender
 {
     // Show an open panel
@@ -76,6 +81,7 @@
         
         // Update the path text field
         [self.pathTextField setStringValue:self.searchDirectoryPath];
+        [self.searchButton setEnabled:YES];
     }
 }
 
@@ -88,17 +94,21 @@
     if (result == NSOKButton) {
         NSString *selectedFile = [[save URL] path];
         
-        NSMutableString *outputResults = [[NSMutableString alloc] init];
-        [outputResults appendFormat:@"Unused Files in project %@\n\n",self.searchDirectoryPath];
+        //Open the file
+        NSFileHandle *fout = [NSFileHandle fileHandleForWritingAtPath:selectedFile];
         
+        //Write the header
+        NSString *line = [NSString stringWithFormat:@"Unused files in project: %@\n\n",[self.searchDirectoryPath lastPathComponent]];
+        [fout writeData:[line dataUsingEncoding:NSUTF8StringEncoding]];
+        
+        //Write each path
         for (NSString *path in _results) {
-            [outputResults appendFormat:@"%@\n",path];
+            line = [NSString stringWithFormat:@"%@\n",[path stringWithPathRelativeTo:[self.searchDirectoryPath stringByDeletingLastPathComponent]]];
+            [fout writeData:[line dataUsingEncoding:NSUTF8StringEncoding]];
         }
         
-        // Output
-        [outputResults writeToFile:selectedFile atomically:YES encoding:NSUTF8StringEncoding error:nil];
-        
-        [outputResults release];
+        //Close the file
+        [fout closeFile];
     }
 }
 
@@ -108,8 +118,8 @@
     if(!self.searchDirectoryPath) {
         // Show an alert
         NSAlert *alert = [[[NSAlert alloc] init] autorelease];
-        [alert setMessageText:@"Project Path Error"];
-        [alert setInformativeText:@"Please select a valid project folder!"];
+        [alert setMessageText:@"Project path error"];
+        [alert setInformativeText:@"Please select a valid project folder."];
         [alert runModal];
         
         return;
@@ -377,11 +387,24 @@
         
     // Scroll to the bottom
     NSInteger numberOfRows = [_resultsTableView numberOfRows];
-    if (numberOfRows > 0)
+    if (numberOfRows > 0 && [_resultsTableView selectedRow] == -1)
         [_resultsTableView scrollRowToVisible:numberOfRows - 1];
 }
 
-#pragma mark - NSTableView Delegate
+#pragma mark - NSTableViewDelegate
+
+- (NSString *)tableView:(NSTableView *)tableView
+         toolTipForCell:(NSCell *)cell
+                   rect:(NSRectPointer)rect
+            tableColumn:(NSTableColumn *)tableColumn
+                    row:(NSInteger)row
+          mouseLocation:(NSPoint)mouseLocation {
+    
+    return [_results objectAtIndex:row];
+}
+
+#pragma mark - NSTableViewDatasource
+
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
 {
     return [_results count];
@@ -396,8 +419,18 @@
         NSString *imageName = [pngPath lastPathComponent];
         return imageName;
     }
+    
+    return [pngPath stringWithPathRelativeTo:[self.searchDirectoryPath stringByDeletingLastPathComponent]];
+}
 
-    return pngPath;
+#pragma mark - Notifications
+
+- (void)searchTextChanged:(NSNotification *)notification {
+    if (!self.pathTextField.stringValue || [self.pathTextField.stringValue length] == 0) {
+        [self.searchButton setEnabled:NO];
+    } else {
+        [self.searchButton setEnabled:YES];
+    }
 }
 
 -(void)tableViewDoubleClicked

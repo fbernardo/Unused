@@ -14,6 +14,8 @@
 		1F55B4BB1478097A008A4B0E /* UnusedAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F55B4BA1478097A008A4B0E /* UnusedAppDelegate.m */; };
 		1F55B4BE1478097A008A4B0E /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F55B4BC1478097A008A4B0E /* MainMenu.xib */; };
 		1F6EFD7A147E597400F8950E /* Icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1F6EFD79147E597400F8950E /* Icon.icns */; };
+		3F55B08415DECEFD008E36E6 /* NSString+Paths.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F55B08315DECEFD008E36E6 /* NSString+Paths.m */; };
+		3F55B08815DED999008E36E6 /* TextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F55B08715DED999008E36E6 /* TextFieldCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +33,10 @@
 		1F55B4BA1478097A008A4B0E /* UnusedAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UnusedAppDelegate.m; sourceTree = "<group>"; };
 		1F55B4BD1478097A008A4B0E /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		1F6EFD79147E597400F8950E /* Icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Icon.icns; sourceTree = "<group>"; };
+		3F55B08215DECEFD008E36E6 /* NSString+Paths.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Paths.h"; sourceTree = "<group>"; };
+		3F55B08315DECEFD008E36E6 /* NSString+Paths.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Paths.m"; sourceTree = "<group>"; };
+		3F55B08615DED999008E36E6 /* TextFieldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextFieldCell.h; sourceTree = "<group>"; };
+		3F55B08715DED999008E36E6 /* TextFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextFieldCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,6 +90,8 @@
 		1F55B4AD1478097A008A4B0E /* Unused */ = {
 			isa = PBXGroup;
 			children = (
+				3F55B08515DED971008E36E6 /* Views */,
+				3F55B08015DECEDA008E36E6 /* Categories */,
 				1F55B4B91478097A008A4B0E /* UnusedAppDelegate.h */,
 				1F55B4BA1478097A008A4B0E /* UnusedAppDelegate.m */,
 				1F55B4BC1478097A008A4B0E /* MainMenu.xib */,
@@ -103,6 +111,24 @@
 				1F55B4B61478097A008A4B0E /* Credits.rtf */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		3F55B08015DECEDA008E36E6 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				3F55B08215DECEFD008E36E6 /* NSString+Paths.h */,
+				3F55B08315DECEFD008E36E6 /* NSString+Paths.m */,
+			);
+			name = Categories;
+			sourceTree = "<group>";
+		};
+		3F55B08515DED971008E36E6 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				3F55B08615DED999008E36E6 /* TextFieldCell.h */,
+				3F55B08715DED999008E36E6 /* TextFieldCell.m */,
+			);
+			name = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -171,6 +197,8 @@
 			files = (
 				1F55B4B51478097A008A4B0E /* main.m in Sources */,
 				1F55B4BB1478097A008A4B0E /* UnusedAppDelegate.m in Sources */,
+				3F55B08415DECEFD008E36E6 /* NSString+Paths.m in Sources */,
+				3F55B08815DED999008E36E6 /* TextFieldCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
